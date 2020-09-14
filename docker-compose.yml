@@ -1,0 +1,34 @@
+version: '3'
+services:
+  keycloak:
+    image: jboss/keycloak:11.0.2
+    container_name: keycloak
+    ports:
+      - 9090:8080
+    environment:
+      - DB_VENDOR=postgres
+      - DB_ADDR=postgres
+      - DB_DATABASE=keycloakdb
+      - DB_USER=postgres
+      - DB_PASSWORD=mysecretpassword
+    networks:
+      - spring_cloud_security_demo
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:12.4
+    container_name: postgres
+    networks:
+      - spring_cloud_security_demo
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=mysecretpassword
+      - POSTGRES_DB=keycloakdb
+
+networks:
+  spring_cloud_security_demo:
+
+volumes:
+  pgdata:
